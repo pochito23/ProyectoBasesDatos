@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Sistema de Reservas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="estilos.css">
+        <link rel="stylesheet" href="estilos.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 <body class="bg-gray-50">
     
@@ -14,34 +17,36 @@
     <div id="menuLateral" class="menu-lateral fixed left-0 top-0 h-full w-64 shadow-lg p-6 z-20 transition-transform duration-300" style="background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%);">
         <div class="mb-8 flex justify-between items-center">
             <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                🎯 Reservas Pro
+                <i class="fas fa-bullseye"></i> Reservas Pro
             </h1>
-            <button onclick="alternarMenu()" class="md:hidden text-gray-600 text-2xl">✕</button>
+            <button onclick="alternarMenu()" class="md:hidden text-gray-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         
         <nav class="space-y-2">
-            <a href="#dashboard" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
-                <span class="text-2xl">📊</span>
+            <a href="#" onclick="mostrarSeccion('dashboard'); return false;" data-seccion="dashboard" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-chart-line"></i></span>
                 <span class="font-medium text-gray-700">Dashboard</span>
             </a>
-            <a href="#productos" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all">
-                <span class="text-2xl">📦</span>
+            <a href="#" onclick="mostrarSeccion('productos'); return false;" data-seccion="productos" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-box"></i></span>
                 <span class="font-medium text-gray-600">Productos</span>
             </a>
-            <a href="#reservas" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all">
-                <span class="text-2xl">📅</span>
+            <a href="#" onclick="mostrarSeccion('reservas'); return false;" data-seccion="reservas" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-calendar-check"></i></span>
                 <span class="font-medium text-gray-600">Reservas</span>
             </a>
-            <a href="#calendario" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all">
-                <span class="text-2xl">🗓️</span>
+            <a href="#" onclick="mostrarSeccion('calendario'); return false;" data-seccion="calendario" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-calendar-alt"></i></span>
                 <span class="font-medium text-gray-600">Calendario</span>
             </a>
-            <a href="#clientes" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all">
-                <span class="text-2xl">👥</span>
+            <a href="#" onclick="mostrarSeccion('clientes'); return false;" data-seccion="clientes" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-users"></i></span>
                 <span class="font-medium text-gray-600">Clientes</span>
             </a>
-            <a href="#reportes" onclick="marcarActivo(this)" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-md transition-all">
-                <span class="text-2xl">📈</span>
+            <a href="#" onclick="mostrarSeccion('reportes'); return false;" data-seccion="reportes" class="enlace-nav flex items-center space-x-3 p-3 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 shadow-sm transition-all   ">
+                <span class="text-2xl"><i class="fas fa-chart-pie"></i></span>
                 <span class="font-medium text-gray-600">Reportes</span>
             </a>
         </nav>
@@ -63,119 +68,7 @@
     </div>
 
     <div class="md:ml-64 p-4 md:p-8">
-        
-        <div class="flex justify-between items-center mb-6 md:mb-8 fade-in">
-            <div class="flex items-center gap-3">
-                <button onclick="alternarMenu()" class="md:hidden p-2 bg-white rounded-lg shadow">
-                    <span class="text-2xl">☰</span>
-                </button>
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Dashboard Principal</h2>
-                    <p class="text-gray-500 mt-1 text-sm md:text-base">Bienvenido de vuelta 👋</p>
-                </div>
-            </div>
-            <div class="flex space-x-2 md:space-x-3">
-                <button class="relative p-2 md:p-3 bg-white rounded-lg shadow hover:shadow-md transition-all">
-                    <span class="text-xl md:text-2xl">🔔</span>
-                    <span class="absolute top-1 right-1 md:top-2 md:right-2 w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-                </button>
-                <button class="p-2 md:p-3 bg-white rounded-lg shadow hover:shadow-md transition-all">
-                    <span class="text-xl md:text-2xl">⚙️</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-pink-300 fade-in hover:transform hover:-translate-y-1 transition-all" style="animation-delay: 0.1s">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Total Productos</p>
-                        <h3 id="contadorProductos" class="text-3xl md:text-4xl font-bold text-gray-800 animacion-contador">48</h3>
-                        <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +12% vs mes anterior
-                        </p>
-                    </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #fecdd3, #fbcfe8);">
-                        📦
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-blue-300 fade-in hover:transform hover:-translate-y-1 transition-all" style="animation-delay: 0.2s">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Reservas Activas</p>
-                        <h3 id="contadorReservas" class="text-3xl md:text-4xl font-bold text-gray-800 animacion-contador">156</h3>
-                        <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +8% vs mes anterior
-                        </p>
-                    </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bfdbfe, #ddd6fe);">
-                        📅
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-green-300 sm:col-span-2 lg:col-span-1 fade-in hover:transform hover:-translate-y-1 transition-all" style="animation-delay: 0.3s">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Ingresos Totales</p>
-                        <h3 id="contadorIngresos" class="text-3xl md:text-4xl font-bold text-gray-800 animacion-contador">$12,450</h3>
-                        <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +15% vs mes anterior
-                        </p>
-                    </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bbf7d0, #d9f99d);">
-                        💰
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg mb-6 md:mb-8 fade-in">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
-                <h3 class="text-lg md:text-xl font-bold text-gray-800">📊 Reservas - Últimos 7 días</h3>
-                <select id="periodoGrafico" onchange="actualizarGrafico()" class="px-3 md:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-sm">
-                    <option value="7">Últimos 7 días</option>
-                    <option value="30">Últimos 30 días</option>
-                    <option value="90">Últimos 3 meses</option>
-                </select>
-            </div>
-            <div id="contenedorGrafico" class="flex items-end justify-around h-48 md:h-64 space-x-2 md:space-x-4"></div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg fade-in">
-                <div class="flex justify-between items-center mb-4 md:mb-6">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800">🔥 Productos Más Rentados</h3>
-                    <a href="#" class="text-pink-400 hover:text-pink-500 text-xs md:text-sm font-medium">Ver todos →</a>
-                </div>
-                <div id="productosPopulares" class="space-y-3 md:space-y-4"></div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg fade-in">
-                <div class="flex justify-between items-center mb-4 md:mb-6">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800">🕐 Reservas de Hoy</h3>
-                    <span id="fechaActual" class="px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium text-green-700" style="background: linear-gradient(135deg, #B5EAD7 0%, #C7FFDB 100%);"></span>
-                </div>
-                <div id="reservasHoy" class="space-y-3 md:space-y-4"></div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 fade-in">
-            <button onclick="abrirModal('modalProducto')" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(135deg, #FFB5E8 0%, #DCD6F7 100%);">
-                <span class="text-xl md:text-2xl">➕</span>
-                <span>Agregar Producto</span>
-            </button>
-            <button onclick="abrirModal('modalReserva')" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(135deg, #AEC6FF 0%, #B5EAD7 100%);">
-                <span class="text-xl md:text-2xl">📅</span>
-                <span>Nueva Reserva</span>
-            </button>
-            <button onclick="generarReporte()" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(to right, #c084fc, #f9a8d4);">
-                <span class="text-xl md:text-2xl">📊</span>
-                <span>Generar Reporte</span>
-            </button>
-        </div>
+        <div id="contenidoPrincipal"></div>
     </div>
 
     <div id="modalProducto" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
@@ -278,6 +171,41 @@
                     </button>
                     <button type="submit" class="flex-1 px-4 md:px-6 py-2 md:py-3 rounded-xl text-white font-medium text-sm md:text-base" style="background: linear-gradient(135deg, #FFB5E8 0%, #DCD6F7 100%);">
                         Guardar Reserva
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl p-4 md:p-8 max-w-2xl w-full shadow-2xl max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-800">Agregar Nuevo Cliente</h3>
+                <button onclick="cerrarModal('modalCliente')" class="text-gray-400 hover:text-gray-600 text-2xl md:text-3xl">&times;</button>
+            </div>
+
+            <form id="formularioCliente" onsubmit="guardarCliente(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre Completo *</label>
+                    <input type="text" id="nombreCliente" required class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all text-sm md:text-base" placeholder="Ej: Juan Pérez">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input type="email" id="emailCliente" required class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all text-sm md:text-base" placeholder="juan@email.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono *</label>
+                    <input type="tel" id="telefonoCliente" required class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all text-sm md:text-base" placeholder="555-0101">
+                </div>
+
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
+                    <button type="button" onclick="cerrarModal('modalCliente')" class="flex-1 px-4 md:px-6 py-2 md:py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-all text-sm md:text-base">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-4 md:px-6 py-2 md:py-3 rounded-xl text-white font-medium text-sm md:text-base" style="background: linear-gradient(135deg, #c084fc, #f9a8d4);">
+                        Guardar Cliente
                     </button>
                 </div>
             </form>
