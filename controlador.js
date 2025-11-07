@@ -1,7 +1,6 @@
 let usuarioActual = null;
 let seccionActual = 'dashboard';
 
-// Generar IDs únicos
 let contadorProductoId = 4;
 let contadorReservaId = 4;
 let contadorClienteId = 3;
@@ -32,8 +31,26 @@ const datosGrafico = {
     '90': [50, 65, 60, 70, 75, 80, 70],
 };
 
+function handleCredentialResponse(response) {
+    const token = response.credential;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    
+    usuarioActual = {
+        nombre: payload.name,
+        email: payload.email,
+        foto: payload.picture
+    };
+    
+    window.location.href = 'dashboard.html';
+}
+
 function iniciarConGoogle() {
-    mostrarNotificacion('Para usar Google Sign-In necesitas configurar OAuth 2.0. Por ahora usa el login con email', 'warning');
+    google.accounts.id.initialize({
+        client_id: "596489853911-hc94h3mbv268mh7js20uf4hdcll3uqs4.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+    });
+    
+    google.accounts.id.prompt();
 }
 
 function iniciarSesion(evento) {
@@ -117,7 +134,7 @@ function mostrarReservasHoy() {
             <div class="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all">
                 <div class="w-12 md:w-16 text-center flex-shrink-0">
                     <p class="text-xs text-gray-500 font-medium">${inicio}</p>
-                    <p class="text-xs text-gray-400">↓</p>
+                    <p class="text-xs text-gray-400"><i class="fas fa-arrow-down"></i></p>
                     <p class="text-xs text-gray-500 font-medium">${fin}</p>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -155,7 +172,6 @@ function mostrarSeccion(seccion) {
     seccionActual = seccion;
     const contenedor = document.getElementById('contenidoPrincipal');
     
-    // Actualizar navegación activa
     document.querySelectorAll('.enlace-nav').forEach(enlace => {
         enlace.classList.remove('bg-white', 'shadow-sm');
         enlace.classList.add('hover:bg-white', 'hover:shadow-md');
@@ -203,63 +219,70 @@ function mostrarSeccion(seccion) {
 
 function obtenerHTMLDashboard() {
     return `
-        <div class="flex justify-between items-center mb-6 md:mb-8 ">
+        <div class="flex justify-between items-center mb-6 md:mb-8">
             <div class="flex items-center gap-3">
                 <button onclick="alternarMenu()" class="md:hidden p-2 bg-white rounded-lg shadow">
-                    <span class="text-2xl">☰</span>
+                    <i class="fas fa-bars text-2xl"></i>
                 </button>
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Dashboard Principal</h2>
-                    <p class="text-gray-500 mt-1 text-sm md:text-base">Bienvenido de vuelta </p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Panel Principal</h2>
+                    <p class="text-gray-500 mt-1 text-sm md:text-base">Bienvenido de vuelta</p>
                 </div>
             </div>
-
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
             <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-pink-300 hover:-translate-y-1 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1 ">Total Productos</p>
+                        <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Total Productos</p>
                         <h3 id="contadorProductos" class="text-3xl md:text-4xl font-bold text-gray-800">${listaProductos.length}</h3>
                         <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +12% vs mes anterior
+                            <i class="fas fa-arrow-up mr-1"></i> +12% vs mes anterior
                         </p>
                     </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #fecdd3, #fbcfe8);">📦</div>
+                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #fecdd3, #fbcfe8);">
+                        <i class="fas fa-box"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-blue-300  hover:transform hover:-translate-y-1 transition-all">
+            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-blue-300 hover:transform hover:-translate-y-1 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Reservas Activas</p>
                         <h3 id="contadorReservas" class="text-3xl md:text-4xl font-bold text-gray-800">${listaReservas.filter(r => r.estado !== 'cancelada').length}</h3>
                         <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +8% vs mes anterior
+                            <i class="fas fa-arrow-up mr-1"></i> +8% vs mes anterior
                         </p>
                     </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bfdbfe, #ddd6fe);"><i class="fa-solid fa-calendar-days"></i></div>
+                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bfdbfe, #ddd6fe);">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-green-300 sm:col-span-2 lg:col-span-1  hover:transform hover:-translate-y-1 transition-all">
+            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg border-t-4 border-green-300 sm:col-span-2 lg:col-span-1 hover:transform hover:-translate-y-1 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-500 text-xs md:text-sm font-medium mb-1">Ingresos Totales</p>
                         <h3 id="contadorIngresos" class="text-3xl md:text-4xl font-bold text-gray-800">$12,450</h3>
                         <p class="text-green-500 text-xs md:text-sm mt-2 flex items-center">
-                            <span class="mr-1">↗️</span> +15% vs mes anterior
+                            <i class="fas fa-arrow-up mr-1"></i> +15% vs mes anterior
                         </p>
                     </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bbf7d0, #d9f99d);"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-xl md:text-2xl" style="background: linear-gradient(135deg, #bbf7d0, #d9f99d);">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg mb-6 md:mb-8 ">
+        <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg mb-6 md:mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
-                <h3 class="text-lg md:text-xl font-bold text-gray-800">📊 Reservas - Últimos 7 días</h3>
+                <h3 class="text-lg md:text-xl font-bold text-gray-800">
+                    <i class="fas fa-chart-bar mr-2"></i> Reservas - Últimos 7 días
+                </h3>
                 <select id="periodoGrafico" onchange="actualizarGrafico()" class="px-3 md:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-sm">
                     <option value="7">Últimos 7 días</option>
                     <option value="30" selected>Últimos 30 días</option>
@@ -270,34 +293,40 @@ function obtenerHTMLDashboard() {
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg ">
+            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
                 <div class="flex justify-between items-center mb-4 md:mb-6">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800">🔥 Productos Más Rentados</h3>
-                    <a href="#" onclick="mostrarSeccion('productos'); return false;" class="text-pink-400 hover:text-pink-500 text-xs md:text-sm font-medium">Ver todos →</a>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800">
+                        <i class="fas fa-fire mr-2"></i> Productos Más Rentados
+                    </h3>
+                    <a href="#" onclick="mostrarSeccion('productos'); return false;" class="text-pink-400 hover:text-pink-500 text-xs md:text-sm font-medium">
+                        Ver todos <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
                 </div>
                 <div id="productosPopulares" class="space-y-3 md:space-y-4"></div>
             </div>
 
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg ">
+            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
                 <div class="flex justify-between items-center mb-4 md:mb-6">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800">🕐 Reservas de Hoy</h3>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800">
+                        <i class="fas fa-clock mr-2"></i> Reservas de Hoy
+                    </h3>
                     <span id="fechaActual" class="px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium text-green-700" style="background: linear-gradient(135deg, #B5EAD7 0%, #C7FFDB 100%);"></span>
                 </div>
                 <div id="reservasHoy" class="space-y-3 md:space-y-4"></div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 ">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
             <button onclick="abrirModal('modalProducto')" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(135deg, #FFB5E8 0%, #DCD6F7 100%);">
-                <span class="text-xl md:text-2xl">➕</span>
+                <i class="fas fa-plus"></i>
                 <span>Agregar Producto</span>
             </button>
             <button onclick="abrirModal('modalReserva')" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(135deg, #AEC6FF 0%, #B5EAD7 100%);">
-                <span class="text-xl md:text-2xl">📅</span>
+                <i class="fas fa-calendar-plus"></i>
                 <span>Nueva Reserva</span>
             </button>
             <button onclick="mostrarSeccion('reportes')" class="py-3 md:py-4 rounded-xl text-white font-semibold text-sm md:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2" style="background: linear-gradient(to right, #c084fc, #f9a8d4);">
-                <span class="text-xl md:text-2xl">📊</span>
+                <i class="fas fa-chart-pie"></i>
                 <span>Ver Reportes</span>
             </button>
         </div>
@@ -308,11 +337,13 @@ function obtenerHTMLProductos() {
     return `
         <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">📦 Gestión de Productos</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+                    <i class="fas fa-box mr-2"></i> Gestión de Productos
+                </h2>
                 <p class="text-gray-500 mt-1">Administra tu catálogo de productos</p>
             </div>
             <button onclick="abrirModal('modalProducto')" class="px-6 py-3 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all" style="background: linear-gradient(135deg, #FFB5E8 0%, #DCD6F7 100%);">
-                ➕ Nuevo Producto
+                <i class="fas fa-plus mr-2"></i> Nuevo Producto
             </button>
         </div>
         <div id="listaProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -323,11 +354,13 @@ function obtenerHTMLReservas() {
     return `
         <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800"><i class="fa-solid fa-calendar-days text-pink-300"></i> Gestión de Reservas</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+                    <i class="fa-solid fa-calendar-days text-pink-300 mr-2"></i> Gestión de Reservas
+                </h2>
                 <p class="text-gray-500 mt-1">Administra todas las reservas</p>
             </div>
             <button onclick="abrirModal('modalReserva')" class="px-6 py-3 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all" style="background: linear-gradient(135deg, #AEC6FF 0%, #B5EAD7 100%);">
-                ➕ Nueva Reserva
+                <i class="fas fa-plus mr-2"></i> Nueva Reserva
             </button>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-lg">
@@ -339,7 +372,9 @@ function obtenerHTMLReservas() {
 function obtenerHTMLCalendario() {
     return `
         <div class="mb-6">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800"><i class="fa-solid fa-calendar-days text-purple-300"></i> Calendario de Reservas</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+                <i class="fa-solid fa-calendar-days text-purple-300 mr-2"></i> Calendario de Reservas
+            </h2>
             <p class="text-gray-500 mt-1">Vista mensual de todas las reservas</p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-lg">
@@ -352,11 +387,13 @@ function obtenerHTMLClientes() {
     return `
         <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">👥 Gestión de Clientes</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+                    <i class="fas fa-users mr-2"></i> Gestión de Clientes
+                </h2>
                 <p class="text-gray-500 mt-1">Administra tu base de clientes</p>
             </div>
             <button onclick="abrirModal('modalCliente')" class="px-6 py-3 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all" style="background: linear-gradient(135deg, #c084fc, #f9a8d4);">
-                ➕ Nuevo Cliente
+                <i class="fas fa-plus mr-2"></i> Nuevo Cliente
             </button>
         </div>
         <div id="listaClientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -369,13 +406,15 @@ function obtenerHTMLReportes() {
     
     return `
         <div class="mb-6">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">📊 Reportes y Estadísticas</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+                <i class="fas fa-chart-bar mr-2"></i> Reportes y Estadísticas
+            </h2>
             <p class="text-gray-500 mt-1">Análisis detallado del negocio</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div class="bg-white rounded-xl p-6 shadow-lg">
-                <div class="text-3xl mb-2"><i class="fa-solid fa-sack-dollar text-yellow-200"></i></div>
+                <div class="text-3xl mb-2"><i class="fa-solid fa-sack-dollar text-yellow-400"></i></div>
                 <p class="text-gray-500 text-sm">Ingresos Totales</p>
                 <p class="text-2xl font-bold text-gray-800">$${totalIngresos.toLocaleString()}</p>
             </div>
@@ -385,25 +424,27 @@ function obtenerHTMLReportes() {
                 <p class="text-2xl font-bold text-gray-800">${listaReservas.length}</p>
             </div>
             <div class="bg-white rounded-xl p-6 shadow-lg">
-                <div class="text-3xl mb-2">✅</div>
+                <div class="text-3xl mb-2"><i class="fas fa-check-circle text-green-500"></i></div>
                 <p class="text-gray-500 text-sm">Confirmadas</p>
                 <p class="text-2xl font-bold text-green-600">${listaReservas.filter(r => r.estado === 'confirmada').length}</p>
             </div>
             <div class="bg-white rounded-xl p-6 shadow-lg">
-                <div class="text-3xl mb-2">❌</div>
+                <div class="text-3xl mb-2"><i class="fas fa-times-circle text-red-500"></i></div>
                 <p class="text-gray-500 text-sm">Tasa Cancelación</p>
                 <p class="text-2xl font-bold text-red-600">${tasaCancelacion}%</p>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">🔥 Top 5 Productos Más Rentados</h3>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-fire mr-2"></i> Top 5 Productos Más Rentados
+            </h3>
             <div class="space-y-3">
                 ${listaProductos.sort((a, b) => b.reservas - a.reservas).slice(0, 5).map((p, i) => `
                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div class="flex items-center space-x-4">
                             <span class="text-2xl font-bold text-gray-400">#${i + 1}</span>
-                            <span class="text-2xl">${p.emoji}</span>
+                            <i class="${p.icon} text-2xl text-pink-400"></i>
                             <div>
                                 <p class="font-semibold text-gray-800">${p.nombre}</p>
                                 <p class="text-sm text-gray-500">${p.categoria}</p>
@@ -419,7 +460,9 @@ function obtenerHTMLReportes() {
         </div>
 
         <div class="bg-white rounded-2xl p-6 shadow-lg">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📈 Distribución por Estado</h3>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-chart-pie mr-2"></i> Distribución por Estado
+            </h3>
             <div class="grid grid-cols-3 gap-4">
                 <div class="text-center p-4 bg-green-50 rounded-lg">
                     <p class="text-4xl font-bold text-green-600">${listaReservas.filter(r => r.estado === 'confirmada').length}</p>
@@ -443,12 +486,16 @@ function renderizarProductos() {
     contenedor.innerHTML = listaProductos.map(producto => `
         <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all">
             <div class="flex justify-between items-start mb-4">
-                <div class="w-16 h-16 bg-gradient-to-br from-pink-300 to-purple-300 rounded-xl flex items-center justify-center text-3xl">
-                    ${producto.emoji}
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-300 to-purple-300 rounded-xl flex items-center justify-center text-3xl text-white">
+                    <i class="${producto.icon}"></i>
                 </div>
                 <div class="flex space-x-2">
-                    <button onclick="editarProducto(${producto.id})" class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-all">✏️</button>
-                    <button onclick="eliminarProducto(${producto.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all">🗑️</button>
+                    <button onclick="editarProducto(${producto.id})" class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-all">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="eliminarProducto(${producto.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
             <h4 class="font-bold text-lg text-gray-800 mb-1">${producto.nombre}</h4>
@@ -486,7 +533,7 @@ function renderizarReservas() {
                     <div>
                         <p class="font-semibold text-gray-800">${reserva.producto}</p>
                         <p class="text-sm text-gray-500">Cliente: ${reserva.cliente}</p>
-                        <p class="text-xs text-gray-400">${reserva.fecha} • ${reserva.hora}</p>
+                        <p class="text-xs text-gray-400">${reserva.fecha} <i class="fas fa-circle text-gray-300" style="font-size: 4px;"></i> ${reserva.hora}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -604,7 +651,9 @@ function abrirModal(idModal) {
     
     if (idModal === 'modalReserva') {
         cargarProductosEnSelect();
+        cargarClientesEnSelect();
     }
+    
 }
 
 function cerrarModal(idModal) {
@@ -631,17 +680,17 @@ function guardarProducto(evento) {
     const descripcion = document.getElementById('descripcionProducto').value;
     const precio = parseFloat(document.getElementById('precioProducto').value);
 
-    const emojisPorCategoria = {
-        'Electrónica': '💻',
-        'Deportes': '⚽',
-        'Fotografía': '📸',
-        'Entretenimiento': '🎮'
+    const iconosPorCategoria = {
+        'Electrónica': 'fas fa-laptop',
+        'Deportes': 'fas fa-futbol',
+        'Fotografía': 'fas fa-camera',
+        'Entretenimiento': 'fas fa-gamepad'
     };
 
     const nuevoProducto = {
         id: ++contadorProductoId,
         nombre: nombre,
-        emoji: emojisPorCategoria[categoria] || '📦',
+        icon: iconosPorCategoria[categoria] || 'fas fa-box',
         reservas: 0,
         categoria: categoria,
         precio: precio,
@@ -654,7 +703,7 @@ function guardarProducto(evento) {
         renderizarProductos();
     }
 
-    alert(`✅ Producto "${nombre}" agregado exitosamente!\n\nCategoría: ${categoria}\nPrecio: ${precio}/hora`);
+    mostrarNotificacion(`Producto "${nombre}" agregado exitosamente - Categoría: ${categoria} - Precio: ${precio}/hora`, 'success');
     cerrarModal('modalProducto');
 }
 
@@ -665,6 +714,15 @@ function cargarProductosEnSelect() {
     select.innerHTML = '<option value="">Seleccionar producto</option>' +
         listaProductos.map(producto =>
             `<option value="${producto.nombre}">${producto.nombre}</option>`
+        ).join('');
+}
+function cargarClientesEnSelect() {
+    const select = document.getElementById('clienteReserva');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Seleccionar cliente</option>' +
+        listaClientes.map(cliente =>
+            `<option value="${cliente.nombre}">${cliente.nombre}</option>`
         ).join('');
 }
 
@@ -757,17 +815,7 @@ function eliminarCliente(id) {
     }
 }
 
-function editarProducto(id) {
-    mostrarNotificacion('Función de edición en desarrollo', 'info');
-}
 
-function editarReserva(id) {
-    mostrarNotificacion('Función de edición en desarrollo', 'info');
-}
-
-function editarCliente(id) {
-    mostrarNotificacion('Función de edición en desarrollo', 'info');
-}
 
 function mostrarNotificacion(mensaje, tipo = 'info') {
     const colores = {
